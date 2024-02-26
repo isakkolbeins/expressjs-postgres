@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-
+    "types": ["node"],
     "incremental": true,
     "target": "es6",
     "module": "commonjs",
