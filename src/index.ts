@@ -9,6 +9,7 @@ const pool = new pg.Pool();
 const app = express();
 const port = process.env.PORT || 3333;
 
+
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
@@ -22,8 +23,8 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/ads", async (req, res) => {
-  const { rows } = await pool.query("SELECT * FROM ads");
-  res.send(`Hello, World! The time from the DB is simple return`);
+  const { rows } = await pool.query("SELECT * FROM Test");
+  res.json(rows);
 });
 
 app.listen(port, () => {
