@@ -43,15 +43,20 @@ app.post('/login', (req, res) => {
 });
 
 app.post("/addListing", async (req, res) => {
+  try {
+    let price = "5000"          // int
+    let timeFrom = new Date("2024-02-01")// date
+    let timeTo = new Date("2024-12-01")// date
+    
+    const query = "INSERT INTO listings (price, timeFrom, timeTo) VALUES ($1, $2, $3)";
+    const values = [price, timeFrom, timeTo];
 
-  let price = "5000"          // int
-  let timeFrom = new Date("2024-02-01")// date
-  let timeTo = new Date("2024-12-01")// date
-
-  let query = "INSERT INTO listings (price, timeFrom, timeTo)";
-            query = query + `VALUES (${price}, ${timeFrom}, ${timeTo})`;
-  const { rows } = await pool.query(query);
-  res.json(rows);
+    const result = await pool.query(query, values);
+    res.json({ success: true, message: "Listing added successfully" });
+  } catch (error) {
+    console.error("Error adding listing:", error);
+    res.status(500).json({ success: false, message: "Failed to add listing" });
+  }
 });
 
 
