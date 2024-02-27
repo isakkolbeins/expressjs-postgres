@@ -12,7 +12,14 @@ const pool = new pg.Pool({
   connectionString,
 });
 
+// Enable CORS for all routes 
 const app = express();
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 const port = process.env.PORT || 3333;
 
 app.use(express.json());
