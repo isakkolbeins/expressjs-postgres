@@ -23,7 +23,6 @@ app.use(express.urlencoded({
 
 
 // Get requests 
-
 app.get("/", async (req, res) => {
   res.send(`Hello, World! The time from the DB is simple return`);
 });
@@ -41,7 +40,7 @@ app.get("/allLandlords", async (req, res) => {
 });
 
 // Landlord by landlord_id
-app.get("/landlords/:landlord_id", async (req, res) => {
+app.get("/landlord/:landlord_id", async (req, res) => {
   try {
     const landlord_id = req.params.landlord_id;
 
@@ -83,18 +82,22 @@ const addUser = async (full_name: any, email: any, password_hash: any) => {
   }
 }
 
+const editUser = async (user_id: any, full_name: any, email: any, password_hash: any) => {
+  try {
+    const query = "UPDATE users SET full_name = $1, email = $2, password_hash = $3 WHERE user_id = $4";
+    const values = [full_name, email, password_hash, user_id];
+
+    const result = await pool.query(query, values);
+    return;
+  } catch (error) {
+    console.error("Error editing user:", error);
+  }
+}
+
 // Add a new Landlord
 app.post("/addLandlord", async (req, res) => {
   try {
-    /*const name = "isak";
-    const email = "mail@isak.is"
-    const pw = "pw!"
-    const address = "address"
-    const time_from = new Date("2024-02-01"); // date
-    const time_to = new Date("2024-12-01");   // date
-    const price = 5000;                      // int
-
-
+    /*
     json testing body: 
     {
       "name": "John Doe",
@@ -137,11 +140,24 @@ app.post("/addLandlord", async (req, res) => {
 // Edit the landlord - update values 
 app.put("/editLandlord/:landlord_id", async (req, res) => {
   try {
+    /*
+    json testing body: 
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "password123",
+      "address": "123 Main St",
+      "time_from": "2024-02-01",
+      "time_to": "2024-12-01",
+      "rent_price": 5000,
+      "amenities": "Swimming pool, Gym",
+      "description": "Spacious apartment with beautiful view",
+      "size": 1000
+    }*/
+
     const landlord_id = req.params.landlord_id;
-
     // Extract info from the request body
-    const { address, time_from, time_to, rent_price, amenities, description, size } = req.body;
-
+    const { name, email, password, address, time_from, time_to, rent_price, amenities, description, size } = req.body;
     // Execute SQL UPDATE statement
     const query = `
       UPDATE landlords 
@@ -157,6 +173,11 @@ app.put("/editLandlord/:landlord_id", async (req, res) => {
     }
 
     const updatedLandlord = rows[0];
+
+    const user_id = updatedLandlord.user_id;
+    await editUser(user_id, name, email, password);
+
+
     res.json({ success: true, message: "Landlord updated successfully", landlord: updatedLandlord });
   } catch (error) {
     console.error("Error updating landlord:", error);
