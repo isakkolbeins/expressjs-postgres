@@ -7,8 +7,6 @@ import pg from "pg";
 // const pool = new pg.Pool();
 // The secret connection string you copied earlier
 const connectionString = process.env.DATABASE_URL;
-  //"postgresql://postgres:5C1gbdGF2DdgFCEGAff46CBge2DfC1*6@postgres.railway.internal:5432/railway";
-  // '${{ DATABASE_URL }}';
 const pool = new pg.Pool({
   connectionString,
 });
@@ -16,23 +14,46 @@ const pool = new pg.Pool({
 const app = express();
 const port = process.env.PORT || 3333;
 
-
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
-// app.use(bodyParser.raw({ type: "application/vnd.custom-type" }));
-// app.use(bodyParser.text({ type: "text/html" }));
+
+
+
+// Get requests 
 
 app.get("/", async (req, res) => {
   // const { rows } = await pool.query("SELECT NOW()");
   res.send(`Hello, World! The time from the DB is simple return`);
 });
 
-app.get("/ads", async (req, res) => {
-  const { rows } = await pool.query("SELECT * FROM Test");
+app.get("/allListings", async (req, res) => {
+  const { rows } = await pool.query("SELECT * FROM Listings");
   res.json(rows);
 });
+
+// Post requests
+
+app.post('/login', (req, res) => {
+  // Insert Login Code Here
+  let username = req.body.username;
+  let password = req.body.password;
+  res.send(`Username: ${username} Password: ${password}`);
+});
+
+app.post("/addListing", async (req, res) => {
+
+  let price = "5000"          // int
+  let timeFrom = new Date("2024-02-01")// date
+  let timeTo = new Date("2024-12-01")// date
+
+  let query = "INSERT INTO listings (price, timeFrom, timeTo)";
+            query = query + `VALUES (${price}, ${timeFrom}, ${timeTo})`;
+  const { rows } = await pool.query(query);
+  res.json(rows);
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
