@@ -107,11 +107,48 @@ app.post('/login', async (req, res) => {
     console.error("Error logging in:", error);
     res.status(500).json({ success: false, message: "Failed to login" });
   }
-  
-
-
-
   // res.send(`Username: ${username} Password: ${password}`);
+});
+
+// Add a new Tenant
+app.post("/signupTenant", async (req, res) => {
+  try {
+    /*
+    Request body example:
+    {
+      "name": "Elsa Karlsson",
+      "email": "elsa.karlsson@example.com",
+      "password": "secure123",
+      "time_from": "2024-05-01",
+      "time_to": "2025-04-30",
+      "min_price": 5000,
+      "max_price": 12000,
+      "description": "Modern apartment with city view",
+      "location_of_interest": "KTH Kista",
+      "profile_photo": "temp-should be binary?"
+    }
+    */
+
+    // Extract info from the request body
+    const { name, email, password, time_from, time_to, min_price, max_price, description, location_of_interest, profile_photo } = req.body;
+    const usertype = "tenant";
+    const user_id = await addUser(name, email, password, usertype);
+
+    const query = 
+      `INSERT INTO tenants 
+      (user_id, time_from, time_to, min_price, max_price, description, location_of_interest, profile_photo) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+      RETURNING tenant_id`;
+    const values = [user_id, new Date(time_from), new Date(time_to), min_price, max_price, description, location_of_interest, profile_photo];
+
+    const result = await pool.query(query, values);
+    const tenant_id = result.rows[0].tenant_id;
+
+    res.json({ success: true, message: "Tenant added successfully", tenant_id: tenant_id});
+  } catch (error) {
+    console.error("Error adding tenant:", error);
+    res.status(500).json({ success: false, message: "Failed to add tenant" });
+  }
 });
 
 
