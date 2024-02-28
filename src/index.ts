@@ -88,11 +88,30 @@ app.get("/landlord/:landlord_id", async (req, res) => {
 
 // Post requests
 
-app.post('/login', (req, res) => {
-  // Insert Login Code Here
-  let username = req.body.username;
-  let password = req.body.password;
-  res.send(`Username: ${username} Password: ${password}`);
+app.post('/login', async (req, res) => {
+  // Insert Login Code Her
+  const { email, password_hash } = req.body;
+
+  try {
+    const query = "SELECT * FROM users WHERE email = $1 AND password_hash = $2";
+    const values = [email, password_hash];
+
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, message: "Landlord added successfully", user: result.rows[0]});
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).json({ success: false, message: "Failed to login" });
+  }
+  
+
+
+
+  // res.send(`Username: ${username} Password: ${password}`);
 });
 
 
