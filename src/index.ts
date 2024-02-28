@@ -54,12 +54,12 @@ app.get("/", async (req, res) => {
 });
 
 //Used to fix the time_to type
-/*
+
 app.get("/datatype", async (req, res) => {
-  const { rows } = await pool.query("ALTER TABLE images ALTER COLUMN image TYPE BYTEA USING image::BYTEA");
+  const { rows } = await pool.query("ALTER TABLE tenants ALTER COLUMN tenant_id TYPE SERIAL USING tenant_id::SERIAL");
   res.json(rows);	
 });
-*/
+
 
 app.get("/allLandlords", async (req, res) => {
   const { rows } = await pool.query("SELECT * FROM landlords");
@@ -138,7 +138,7 @@ app.post('/login', async (req, res) => {
 
 const addUser = async (full_name: any, email: any, password_hash: any, usertype: any) => {
   try {
-    const query = "INSERT INTO users (full_name, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING user_id";
+    const query = "INSERT INTO users (full_name, email, password_hash, usertype) VALUES ($1, $2, $3, $4) RETURNING user_id";
     const values = [full_name, email, password_hash, usertype];
 
     const result = await pool.query(query, values);
