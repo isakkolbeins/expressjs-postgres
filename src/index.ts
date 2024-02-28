@@ -321,16 +321,16 @@ app.post("/addTenant", async (req, res) => {
     */
     
     // Extract info from the request body
-    const { name, email, password, time_from, time_to, min_price, max_price, description, size, location_of_interest, profile_photo } = req.body;
+    const { name, email, password, time_from, time_to, min_price, max_price, tenant_description, location_of_interest, profile_photo } = req.body;
     const usertype = "tenant";
     const user_id = await addUser(name, email, password, usertype);
 
     const query = 
       `INSERT INTO tenants 
-      (user_id, time_from, time_to, min_price, max_price, description, location_of_interest, profile_photo) 
+      (user_id, time_from, time_to, min_price, max_price, tenant_description, location_of_interest, profile_photo) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
       RETURNING tenant_id`;
-    const values = [user_id, new Date(time_from), new Date(time_to), min_price, max_price, description, location_of_interest, profile_photo];
+    const values = [user_id, new Date(time_from), new Date(time_to), min_price, max_price, tenant_description, location_of_interest, profile_photo];
 
     const result = await pool.query(query, values);
     const tenant_id = result.rows[0].tenant_id;
