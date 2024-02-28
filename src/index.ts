@@ -86,6 +86,27 @@ app.get("/landlord/:landlord_id", async (req, res) => {
   }
 });
 
+// Landlord by landlord_id
+app.get("/imagesByLandlord/:landlord_id", async (req, res) => {
+  try {
+    const landlord_id = req.params.landlord_id;
+
+    const query = "SELECT * FROM images WHERE landlord_id = $1";
+    const { rows } = await pool.query(query, [landlord_id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Images not found" });
+    }
+
+    const images = rows;
+    res.json({ success: true, images });
+  } catch (error) {
+    console.error("Error fetching images:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch Images" });
+  }
+});
+
+
 // Post requests
 
 app.post('/login', async (req, res) => {
