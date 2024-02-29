@@ -324,7 +324,7 @@ app.post("/addLandlord", async (req, res) => {
     // Populate 4 images
     populateImages(landlord_id);
 
-    res.json({ success: true, message: "Landlord added successfully", landlord_id: landlord_id});
+    res.json({ success: true, message: "Landlord added successfully", landlord_id: landlord_id, user_id:user_id});
   } catch (error) {
     console.error("Error adding landlord:", error);
     res.status(500).json({ success: false, message: "Failed to add landlord" });
@@ -368,7 +368,7 @@ app.post("/addTenant", async (req, res) => {
      const result = await pool.query(query, values);
      const tenant_id = result.rows[0].tenant_id;
 
-    res.json({ success: true, message: "Tenant added successfully", tenant_id: tenant_id});
+    res.json({ success: true, message: "Tenant added successfully", tenant_id: tenant_id, user_id:user_id});
   } catch (error) {
     console.error("Error adding tenant:", error);
     res.status(500).json({ success: false, message: "Failed to add tenant" });
