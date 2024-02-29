@@ -60,6 +60,46 @@ app.get("/datatype", async (req, res) => {
 });
 */
 
+
+// Get all maches for user_id 
+app.get("/matchesForUserId/:user_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+
+    // Get the user
+    const query = "SELECT * FROM users WHERE user_id = $1";
+    const { rows } = await pool.query(query, [user_id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const user = rows[0];
+    if (user.usertype != "tenant") {
+      return res.status(404).json({ success: false, message: "User is not a tenant " });
+    }
+
+    const tenant = await getProfile(user_id, "tenants");
+    //console.log(tenant);
+
+
+    const matches = await getMatches(tenant.time_from, tenant.time_to, tenant.min_price, tenant.max_price, tenant.location_of_interest);
+    //console.log(matches);
+
+
+
+    if (!matches) {
+      return res.status(404).json({ success: false, message: "No matches found for user" });
+    }    
+
+    res.json({ success: true, matches});
+  } catch (error) {
+    console.error("Error fetching matches:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch matches" });
+  }
+});
+
+
 app.get("/allLandlords", async (req, res) => {
   const { rows } = await pool.query("SELECT * FROM landlords");
   res.json(rows);
@@ -143,6 +183,29 @@ const getProfile = async (user_id: any, table: any) => {
 
   } catch (error) {
     console.error("Error getting user profile", error);
+  }
+}
+
+
+const getMatches = async (time_from: any, time_to: any, min_price: any, max_price: any, location_of_interest: any) => {
+  try {
+    const query = `
+      SELECT * 
+      FROM landlords 
+      WHERE 
+          time_from <= $1 -- Start time is before or equal to search time_to
+          AND time_to >= $2 -- End time is after or equal to search time_from
+          AND rent_price >= $3 -- Rent price is greater than or equal to minimum price
+          AND rent_price <= $4 -- Rent price is less than or equal to maximum price
+          AND commute_name = $5`;
+  
+    const values = [time_from, time_to, min_price, max_price, location_of_interest];
+
+    const result = await pool.query(query, values);
+    return result.rows;
+
+  } catch (error) {
+    console.error("Error getting matches from parameters", error);
   }
 }
 
