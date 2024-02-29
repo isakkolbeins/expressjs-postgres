@@ -2,44 +2,41 @@ import express from "express";
 import pg from "pg";
 
 const stockImages = ["https://images.pexels.com/photos/129494/pexels-photo-129494.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/681331/pexels-photo-681331.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/275484/pexels-photo-275484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/1668860/pexels-photo-1668860.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/265004/pexels-photo-265004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/2089696/pexels-photo-2089696.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/2416933/pexels-photo-2416933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/15555023/pexels-photo-15555023/free-photo-of-interior-of-a-bedroom-with-a-large-bed-and-wooden-furniture.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/3288103/pexels-photo-3288103.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/3288104/pexels-photo-3288104.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/7214728/pexels-photo-7214728.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-                "https://images.pexels.com/photos/3623770/pexels-photo-3623770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-                "https://images.pexels.com/photos/415687/pexels-photo-415687.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            ];
+                    "https://images.pexels.com/photos/1918291/pexels-photo-1918291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/681331/pexels-photo-681331.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/275484/pexels-photo-275484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/1668860/pexels-photo-1668860.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/265004/pexels-photo-265004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/2089696/pexels-photo-2089696.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/2416933/pexels-photo-2416933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/15555023/pexels-photo-15555023/free-photo-of-interior-of-a-bedroom-with-a-large-bed-and-wooden-furniture.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/3288103/pexels-photo-3288103.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/3288104/pexels-photo-3288104.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/7214728/pexels-photo-7214728.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+                    "https://images.pexels.com/photos/3623770/pexels-photo-3623770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                    "https://images.pexels.com/photos/415687/pexels-photo-415687.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                ];
 
 
-// Connect to the database using the DATABASE_URL environment
-//   variable injected by Railway
-// const pool = new pg.Pool();
-// The secret connection string you copied earlier
+// Connect to the database using the DATABASE_URL environment var injected by Railway
 const connectionString = process.env.DATABASE_URL;
 const pool = new pg.Pool({
   connectionString,
 });
 
-// Enable CORS for all routes 
 const app = express();
+const port = process.env.PORT || 3333;
+
+// Enable CORS for all routes - enabeling localhost req.
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+  res.header('Access-Control-Allow-Origin', '*'); // From any origin
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-
-const port = process.env.PORT || 3333;
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -47,19 +44,21 @@ app.use(express.urlencoded({
 }));
 
 
-
-// Get requests 
+//////////////////////////////
+// GET
+//////////////////////////////
 app.get("/", async (req, res) => {
   res.send(`Hello, World! The time from the DB is simple return`);
 });
 
-//Used to fix the time_to type
 
+//Used to fix the time_to type
+/*
 app.get("/datatype", async (req, res) => {
   const { rows } = await pool.query("ALTER TABLE tenants ALTER COLUMN tenant_id TYPE SERIAL USING tenant_id::SERIAL");
   res.json(rows);	
 });
-
+*/
 
 app.get("/allLandlords", async (req, res) => {
   const { rows } = await pool.query("SELECT * FROM landlords");
@@ -106,11 +105,53 @@ app.get("/imagesByLandlord/:landlord_id", async (req, res) => {
   }
 });
 
+// User by userId
+app.get("/user/:user_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
 
+    const query = "SELECT * FROM users WHERE user_id = $1";
+    const { rows } = await pool.query(query, [user_id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const user = rows[0];
+    let table = "";
+    if (user.usertype == "landlord") { table = "landlords"; }
+    else if (user.usertype == "tenant") {table = "tenants"; }
+
+    const profile = await getProfile(user_id, table);
+    
+
+    res.json({ success: true, user, profile});
+  } catch (error) {
+    console.error("Error fetching userProfile:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch userProfile" });
+  }
+});
+
+
+const getProfile = async (user_id: any, table: any) => {
+  try {
+    const query = `SELECT * FROM ${table} WHERE user_id = $1`;
+    const values = [user_id];
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+
+  } catch (error) {
+    console.error("Error getting user profile", error);
+  }
+}
+
+//////////////////////////////
 // Post requests
+//////////////////////////////
 
+// Login - returns userinfo if successful
 app.post('/login', async (req, res) => {
-  // Insert Login Code Her
   const { email, password_hash } = req.body;
 
   try {
@@ -128,11 +169,6 @@ app.post('/login', async (req, res) => {
     console.error("Error logging in:", error);
     res.status(500).json({ success: false, message: "Failed to login" });
   }
-  
-
-
-
-  // res.send(`Username: ${username} Password: ${password}`);
 });
 
 
@@ -175,6 +211,7 @@ const addPhoto = async (landlord_id: any, image_url: any) => {
 
 const populateImages = async (landlord_id: any) => {
   try {
+    // Shuffle the images - and add 4 images to each "landlord profile"
     let shuffledImgs = stockImages.sort(() => 0.5 - Math.random());
     for (let i = 0; i < 4; i++) {
       addPhoto(landlord_id, shuffledImgs[i]);
@@ -233,6 +270,56 @@ app.post("/addLandlord", async (req, res) => {
 });
 
 
+// Add a new Tenant
+app.post("/addTenant", async (req, res) => {
+  try {
+    /*
+    json testing body: 
+    {
+      "name": "Elsa Karlsson",
+      "email": "elsa.karlsson@example.com",
+      "password": "secure123",
+      "time_from": "2024-05-01",
+      "time_to": "2025-04-30",
+      "min_price": 5000,
+      "max_price": 12000,
+      "description": "Modern apartment with city view",
+      "profile_photo": "temp-should be binary?",
+      "location_of_interest": "KTH Kista"
+    }
+
+    */
+    
+     // Extract info from the request body
+     const { name, email, password, time_from, time_to, min_price, max_price, tenant_description, location_of_interest, profile_photo } = req.body;
+     const usertype = "tenant";
+     const user_id = await addUser(name, email, password, usertype);
+ 
+     const query = 
+       `INSERT INTO tenants 
+       (user_id, time_from, time_to, min_price, max_price, tenant_description, location_of_interest, profile_photo) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+       RETURNING tenant_id`;
+     const values = [user_id, new Date(time_from), new Date(time_to), min_price, max_price, tenant_description, location_of_interest, profile_photo];
+ 
+     const result = await pool.query(query, values);
+     const tenant_id = result.rows[0].tenant_id;
+
+    res.json({ success: true, message: "Tenant added successfully", tenant_id: tenant_id});
+  } catch (error) {
+    console.error("Error adding tenant:", error);
+    res.status(500).json({ success: false, message: "Failed to add tenant" });
+  }
+
+});
+
+
+
+//////////////////////////////
+// Put requests
+//////////////////////////////
+
+
 // Edit the landlord - update values 
 app.put("/editLandlord/:landlord_id", async (req, res) => {
   try {
@@ -283,49 +370,6 @@ app.put("/editLandlord/:landlord_id", async (req, res) => {
   }
 });
 
-
-// Add a new Tenant
-app.post("/addTenant", async (req, res) => {
-  try {
-    /*
-    json testing body: 
-    {
-      "name": "Elsa Karlsson",
-      "email": "elsa.karlsson@example.com",
-      "password": "secure123",
-      "time_from": "2024-05-01",
-      "time_to": "2025-04-30",
-      "min_price": 5000,
-      "max_price": 12000,
-      "description": "Modern apartment with city view",
-      "profile_photo": "temp-should be binary?",
-      "location_of_interest": "KTH Kista"
-    }
-
-    */
-    
-     // Extract info from the request body
-     const { name, email, password, time_from, time_to, min_price, max_price, tenant_description, location_of_interest, profile_photo } = req.body;
-     const usertype = "tenant";
-     const user_id = await addUser(name, email, password, usertype);
- 
-     const query = 
-       `INSERT INTO tenants 
-       (user_id, time_from, time_to, min_price, max_price, tenant_description, location_of_interest, profile_photo) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
-       RETURNING tenant_id`;
-     const values = [user_id, new Date(time_from), new Date(time_to), min_price, max_price, tenant_description, location_of_interest, profile_photo];
- 
-     const result = await pool.query(query, values);
-     const tenant_id = result.rows[0].tenant_id;
-
-    res.json({ success: true, message: "Tenant added successfully", tenant_id: tenant_id});
-  } catch (error) {
-    console.error("Error adding tenant:", error);
-    res.status(500).json({ success: false, message: "Failed to add tenant" });
-  }
-
-});
 
 
 
